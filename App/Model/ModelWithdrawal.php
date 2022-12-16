@@ -2,43 +2,35 @@
 
 namespace miniframework2\App\Model;
 use miniframework2\App\Config\Database;
-class ModelUser extends Database
+class ModelWithdrawal extends Database
 {
     public function all()
     {
-        $statement = self::$conn->prepare("select * from withdrawal left join target on target.id= withdrawal.target_id left join program on program.id= withdrawal.program_id");
+        $statement = self::$conn->prepare("select withdrawal.* , admin.name as adminname, target.saldo_donate,admin.email, target.name as targetname from withdrawal inner join admin on admin.id= withdrawal.admin_id inner join target on target.id= withdrawal.target_id union SELECT withdrawal.*,admin.name as adminname, program.saldo_donate, admin.email, program.name as programname from withdrawal inner join admin on admin.id= withdrawal.admin_id inner join program on program.id= withdrawal.program_id");
         $statement->execute();
         return $statement->fetchAll(\PDO::FETCH_OBJ);
     }
     public function insert($data){
         {
             var_dump($data);
-            $statement = self::$conn->prepare("INSERT INTO user (name,address,phone,email,password,gender,created_at) 
-            values(:name, :address,:phone,:email,:password,:gender,:created_at)");
+            $statement = self::$conn->prepare("INSERT INTO withdrawal(target_id,program_id,admin_id,date,total) 
+            values(:target_id,:program_id,:admin_id,:date,:total)");
             return $statement->execute($data);
         }
-
-    }
-    public function find($id)
-    {
-        $statement = self::$conn->prepare("select * from user where id=$id");
-        $statement->execute();
-        return $statement->fetch(\PDO::FETCH_OBJ);
-    }
-    public function update($data)
-    {
-        $statement = self::$conn->prepare("UPDATE user set name= :name, address= :address, phone=:phone,email=:email, password=:password, gender=:gender, created_at=:created_at where id=:id");
-        return $statement->execute($data);
     }
     public function delete($id){
-
-        $statement = self::$conn->prepare("DELETE from user where id = :id");
+        $statement = self::$conn->prepare("DELETE from withdrawal where id = :id");
         return $statement->execute(['id'=> $id]);
     }
-    public function findemail($email){
-        $statement = self::$conn->prepare("SELECT * FROM user WHERE email = :email");
-        $statement->execute(['email'=>$email]);
-        return $statement->fetch(\PDO::FETCH_OBJ);
+    public function deletevaluetarget($data)
+    {
+        $statement = self::$conn->prepare("update target set  saldo_donate= saldo_donate-:total where id=:id");
+        return $statement->execute($data);
+    }
+    public function deletevalueprogram($data)
+    {
+        $statement = self::$conn->prepare("update program set saldo_donate= saldo_donate-:total where id=:id");
+        return $statement->execute($data);
     }
 }
 

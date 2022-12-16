@@ -12,7 +12,6 @@ class ModelUser extends Database
     }
     public function insert($data){
         {
-            var_dump($data);
             $statement = self::$conn->prepare("INSERT INTO user (name,address,phone,email,password,gender,created_at) 
             values(:name, :address,:phone,:email,:password,:gender,:created_at)");
             return $statement->execute($data);
@@ -36,6 +35,7 @@ class ModelUser extends Database
         return $statement->execute(['id'=> $id]);
     }
     public function findemail($email){
+       
         $statement = self::$conn->prepare("SELECT * FROM user WHERE email = :email");
         $statement->execute(['email'=>$email]);
         return $statement->fetch(\PDO::FETCH_OBJ);

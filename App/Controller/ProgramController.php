@@ -16,61 +16,79 @@ class ProgramController
     }
     public function index()
     {
-        var_dump($this->header->all());
+        View::render('admin/program','admin/styleadmin', $this->header->all());
         // View::render('admin/index', $this->header->all());
-        
-        
+    }
+    public function indexwebsite()
+    {
+        View::render4('program/index','program/styleprogram', $this->header->all());
     }
     public function add()
     {
-        View::render('Target/add', "");
+        View::render('admin/program/add','admin/styleadd', "");
     }
     public function submit()
     {
-        $data = [
-            'name' => 'gigih',
-            'start_program'=>'29-10-2022',
-            'end_program' => "30-11-2022",
-            'description_program'=>"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non, voluptate.",
-            'donate_required' => '12000000',
-            'collected_donate' => "100000",
-            'created_at' => "29-10-2022",
-            'saldo_donate' => "0",
-            'image'=>''
-        ];
-        try {
-            $this->header->insert($data);
-        } catch (\Throwable $th) {
-            echo $th->getMessage();
-        }
-       
-        // Router::redirect("\public");
+        $ekstensi_diperbolehkan	= array('png','jpg');
+        $image = $_FILES['gambar']['name'];
+        $x = explode('.', $image);
+        $ekstensi = strtolower(end($x));
+        $file_tmp = $_FILES['gambar']['tmp_name'];
+        if (in_array($ekstensi, $ekstensi_diperbolehkan) === true){
+    
+            //Mengupload gambar
+            move_uploaded_file($file_tmp, '../public/image/program/'.$image);
+
+            $data = [
+                'name' =>  $_POST['name'],
+                'start_program'=>$_POST['start_program'],
+                'end_program' => $_POST['end_program'],
+                'description_program'=>$_POST['description_program'],
+                'donate_required' => $_POST['donate_required'],
+                'collected_donate' => 0,
+                'created_at' => date('Y-m-d H-i-s'),
+                'saldo_donate' => 0,
+                'image'=>$image,
+            ];
+            try {
+                $this->header->insert($data);
+            } catch (\Throwable $th) {
+                echo $th->getMessage();
+            }
+           
+        
+        
+        Router::redirect("\public\programindex");
     }
+}
     public function update($id)
     {
-        die(var_dump($this->header->find($id)));
-        View::render('Program/update', $this->header->find($id));
+
+        View::render('admin/program/update','admin/styleadd', $this->header->find($id));
     }
     public function delete()
     {
-        // $id = $_POST['id'];
-        $this->header->delete(4);
         
-        // Router::redirect("\public");
+       
+        $id = $_POST['id'];
+        unlink("../public/image/program/". $this->header->find($id)->image);
+        $this->header->delete($id);
+        
+        Router::redirect("\public\programindex");
     }
     public function change()
     {
         $data = [
-            'id'=> 2,
-            'name' => 'Program Peduli Bencana',
-            'start_program'=>'29-10-2022',
-            'end_program' => "30-11-2022",
-            'description_program'=>"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non, voluptate.",
-            'donate_required' => '12000000',
-            'collected_donate' => "100000",
-            'created_at' => "29-10-2022",
-            'saldo_donate' => "0",
-            'image'=>''
+            'id'=>  $_POST['id'],
+            'name' =>  $_POST['name'],
+            'start_program'=>$_POST['start_program'],
+            'end_program' => $_POST['end_program'],
+            'description_program'=>$_POST['description_program'],
+            'donate_required' => $_POST['donate_required'],
+            'collected_donate' => 0,
+            'created_at' => date('Y-m-d H-i-s'),
+            'saldo_donate' => 0,
+           
         ];
         try {
             $this->header->update($data);
@@ -78,6 +96,6 @@ class ProgramController
             echo $th->getMessage();
         }
       
-        // Router::redirect("\public");
+        Router::redirect("\public\programindex");
     }
 }

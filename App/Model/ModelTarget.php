@@ -26,7 +26,7 @@ class ModelTarget extends Database
     }
     public function update($data)
     {
-        $statement = self::$conn->prepare("UPDATE target set name=:name, category=:category, description=:description, address=:address,phone=:phone, required_donate=:required_donate, collected_donate=:collected_donate, saldo_donate=:saldo_donate,image=:image, created_at=:created_at where id=:id");
+        $statement = self::$conn->prepare("UPDATE target set name=:name, category=:category, description=:description, address=:address,phone=:phone, required_donate=:required_donate, collected_donate=:collected_donate, saldo_donate=:saldo_donate,created_at=:created_at where id=:id");
        
         return $statement->execute($data);
         die(var_dump($statement));

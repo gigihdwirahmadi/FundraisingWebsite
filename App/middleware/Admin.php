@@ -1,9 +1,9 @@
 <?php
 namespace miniframework2\App\Middleware;
 use miniframework2\App\Core\Router;
-class Auth{
+class Admin{
     function before(): void{
-        if ($_SESSION['auth']==null){
+        if ($_SESSION['admin']==null){
             Router::redirect('\public\login');
         }
     }

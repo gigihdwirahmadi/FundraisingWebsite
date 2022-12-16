@@ -16,28 +16,40 @@ class TargetController
     }
     public function index()
     {
-        var_dump($this->header->all());
-        // View::render('admin/index', $this->header->all());
+        View::render('admin/target','admin/styleadmin', $this->header->all());
         
         
+    }
+    public function indexwebsite()
+    {
+        View::render4('target/index','target/styletarget', $this->header->all());
     }
     public function add()
     {
-        View::render('Target/add', "");
+        View::render('admin/Target/add', 'admin/styleadd', "");
     }
     public function submit()
     {
+        $ekstensi_diperbolehkan	= array('png','jpg');
+        $image = $_FILES['gambar']['name'];
+        $x = explode('.', $image);
+        $ekstensi = strtolower(end($x));
+        $file_tmp = $_FILES['gambar']['tmp_name'];
+        if (in_array($ekstensi, $ekstensi_diperbolehkan) === true){
+    
+            //Mengupload gambar
+            move_uploaded_file($file_tmp, '../public/image/target/'.$image);
         $data = [
-            'name' => 'gigih',
-            'category'=>'foundation',
-            'description' => "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maxime, dolores.",
-            'address'=>'yogyakarta',
-            'phone' => '0897687878787',
-            'required_donate' => "10000000",
+            'name' =>  $_POST['name'],
+            'category'=> $_POST['category'],
+            'description' => $_POST['description'],
+            'address'=> $_POST['address'],
+            'phone' =>  $_POST['phone'],
+            'required_donate' =>  $_POST['required_donate'],
             'collected_donate' => "0",
             'saldo_donate' => "0",
-            'image'=>'',
-            'created_at' => "29-11-2022"
+            'image'=>$image,
+            'created_at' => date('Y-m-d H-i-s')
         ];
         try {
             $this->header->insert($data);
@@ -45,33 +57,37 @@ class TargetController
             echo $th->getMessage();
         }
        
-        // Router::redirect("\public");
-    }
+        Router::redirect("/public/targetindex");
+    } }
     public function update($id)
     {
+        View::render('admin/Target/update', 'admin/styleadd',$this->header->find($id));
+    }
+    public function getupdate($id)
+    {
         die(var_dump($this->header->find($id)));
-        View::render('Target/update', $this->header->find($id));
+        View::render('target/detail','target/detailstyle', $this->header->find($id));
     }
     public function delete()
     {
-        // $id = $_POST['id'];
-        $this->header->delete(4);
-        // Router::redirect("\public");
+        $id = $_POST['id'];
+        unlink("../public/image/target/". $this->header->find($id)->image);
+        $this->header->delete($id);
+        Router::redirect("/public/targetindex");
     }
     public function change()
     {
         $data = [
-            'id' => 3,
-            'name' => 'jaduiiiiiiiiii',
-            'category'=>'foundation',
-            'description' => "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maxime, dolores.",
-            'address'=>'yogyakarta',
-            'phone' => '0897687878787',
-            'required_donate' => "10000000",
+            'id' =>  $_POST['id'],
+            'name' =>  $_POST['name'],
+            'category'=> $_POST['category'],
+            'description' => $_POST['description'],
+            'address'=> $_POST['address'],
+            'phone' =>  $_POST['phone'],
+            'required_donate' =>  $_POST['required_donate'],
             'collected_donate' => "0",
             'saldo_donate' => "0",
-            'image'=>'',
-            'created_at' => "29-11-2022"
+            'created_at' => date('Y-m-d H-i-s')
         ];
         try {
             $this->header->update($data);
@@ -79,6 +95,6 @@ class TargetController
             echo $th->getMessage();
         }
       
-        // Router::redirect("\public");
+        Router::redirect("/public/targetindex");
     }
 }

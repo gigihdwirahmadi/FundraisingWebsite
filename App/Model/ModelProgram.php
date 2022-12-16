@@ -26,7 +26,7 @@ class ModelProgram extends Database
     }
     public function update($data)
     {
-        $statement = self::$conn->prepare("UPDATE program set name=:name, start_program=:start_program, end_program=:end_program,description_program=:description_program,donate_required=:donate_required,collected_donate=:collected_donate, created_at=:created_at, saldo_donate=:saldo_donate, image=:image where id=:id");
+        $statement = self::$conn->prepare("UPDATE program set name=:name, start_program=:start_program, end_program=:end_program,description_program=:description_program,donate_required=:donate_required,collected_donate=:collected_donate, created_at=:created_at, saldo_donate=:saldo_donate where id=:id");
         return $statement->execute($data);
     }
     public function delete($id){

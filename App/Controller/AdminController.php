@@ -21,34 +21,24 @@ class AdminController
         
         
     }
-    public function add()
-    {
-        View::render('admin/add', "");
-    }
     public function submit()
     {
         $data = [
-            'name' => 'gigih',
-            'gender'=>'male',
-            'address' => 'Yogyakarta',
-            'born_place'=>'yoga',
-            'email' => 'gigih@gmail.com',
-            'password' => "1223",
-            'created_at' => "29-11-2022"
-           
+            'name' => $_POST['name'],
+            'gender'=>$_POST['gender'],
+            'address' => $_POST['address'],
+            'born_place'=>$_POST['born_place'],
+            'email' => $_POST['email'],
+            'username'=>$_POST['username'],
+            'password'=>password_hash($_POST['password'],PASSWORD_DEFAULT),
+            'created_at' => date('Y-m-d H-i-s')
         ];
         try {
             $this->header->insert($data);
         } catch (\Throwable $th) {
             echo $th->getMessage();
         }
-       
-        // Router::redirect("\public");
-    }
-    public function update($id)
-    {
-        die(var_dump($this->header->find($id)));
-        View::render('User/update', $this->header->find($id));
+        Router::redirect("\public");
     }
     public function delete()
     {
@@ -65,6 +55,7 @@ class AdminController
             'address' => 'Yogyakarta',
             'born_place'=>'yoga',
             'email' => 'gigih@gmail.com',
+            'username'=>'gigih',
             'password' => "1223",
             'created_at' => "29-11-2022"
         ];

@@ -12,9 +12,8 @@ class ModelAdmin extends Database
     }
     public function insert($data){
         {
-            var_dump($data);
-            $statement = self::$conn->prepare("INSERT INTO admin (name, gender,address,born_place,password,username,email,created_at) 
-            values(:name, :gender,:address,:born_place,:password,:username,:email,:created_at)");
+            $statement = self::$conn->prepare("INSERT INTO admin (name,address,email,born_place,password,username,gender,created_at) 
+            values(:name,:address,:email,:born_place,:password,:username,:gender,:created_at)");
             return $statement->execute($data);
         }
 

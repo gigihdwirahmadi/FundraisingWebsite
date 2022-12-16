@@ -21,20 +21,16 @@ class UserController
         
         
     }
-    public function add()
-    {
-        View::render('user/add', "");
-    }
     public function submit()
     {
         $data = [
-            'name' => 'gigih',
-            'address' => 'Yogyakarta',
-            'phone' => '089748748758',
-            'email' => 'gigih@gmail.com',
-            'password' => '1235',
-            'gender' => 'male',
-            'created_at' => "29-11-2022"
+            'name' => $_POST['name'],
+            'address' => $_POST['address'],
+            'phone' => $_POST['phone'],
+            'email' => $_POST['email'],
+            'password'=>password_hash($_POST['password'],PASSWORD_DEFAULT),
+            'gender' => $_POST['gender'],
+            'created_at' => date('Y-m-d H-i-s')
            
         ];
         try {
@@ -45,11 +41,7 @@ class UserController
        
         // Router::redirect("\public");
     }
-    public function update($id)
-    {
-        die(var_dump($this->header->find($id)));
-        View::render('User/update', $this->header->find($id));
-    }
+
     public function delete()
     {
         // $id = $_POST['id'];
